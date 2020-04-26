@@ -39,18 +39,18 @@ exports.getCategories = asyncHandler(async (req, res, next) => {
 // @desc      Get single category
 // @route     GET /api/category/:categoryId
 // @access    Public
-exports.getCategory = asyncHandler(async (req, res, next) => {
-  const doctor = await Doctor.find({ category: req.params.categoryId });
+// exports.getCategory = asyncHandler(async (req, res, next) => {
+//   const doctor = await Doctor.find({ specialization: req.params.categoryId });
 
-  if (!doctor) {
-    return next(new ErrorResponse(`No Doctor in this category`), 404);
-  }
+//   if (!doctor) {
+//     return next(new ErrorResponse(`No Doctor in this category`), 404);
+//   }
 
-  res.status(200).json({
-    success: true,
-    data: Doctor,
-  });
-});
+//   res.status(200).json({
+//     success: true,
+//     data: doctor,
+//   });
+// });
 
 // @desc      Add category
 // @route     POST /api/category/:categoryId
@@ -59,14 +59,14 @@ exports.addCategory = asyncHandler(async (req, res, next) => {
   // Add user to req,body
   req.body.user = req.user.id;
 
-  // Check for published category
-  const categorypublished = await Category.findOne({
-    user: req.user.id,
-  });
+  // // Check for published category
+  // const categorypublished = await Category.findOne({
+  //   catname: req.body.catname,
+  // });
 
-  if (req.body.catname === categorypublished.catname) {
-    return next(new ErrorResponse(`Same Category `, 400));
-  }
+  // if (categorypublished.catname) {
+  //   return next(new ErrorResponse(`Same Category `, 400));
+  // }
   const category = await Category.create(req.body);
 
   res.status(201).json({

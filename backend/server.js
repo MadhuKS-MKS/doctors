@@ -67,13 +67,13 @@ app.use(hpp());
 app.use(cors());
 
 // image upload
-app.use(express.static("public"));
+// app.use(express.static(__dirname/frontend/public/uploads/));
+
 //Mount routers
 
 app.use("/api/v1/doctor", doctor);
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/users", users);
-
 app.use("/api/v1/category", category);
 
 app.use(errorHandler);

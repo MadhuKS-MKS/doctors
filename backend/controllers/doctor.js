@@ -8,7 +8,31 @@ const Doctor = require("../models/Doctor");
 // @route     GET /api/v1/doctor
 // @access    doctor
 exports.getDoctors = asyncHandler(async (req, res, next) => {
-  res.status(200).json(res.advancedResults);
+  const doctor = await Doctor.find().populate({
+    path: "specialization",
+    select: "catname",
+  });
+
+  return res.status(200).json({
+    success: true,
+    count: doctor.length,
+    data: doctor,
+  });
+});
+
+// @desc      Get current logged in user
+// @route     POST /api/v1/auth/me
+// @access    Private
+exports.getMe = asyncHandler(async (req, res, next) => {
+  const doctor = await Doctor.findOne({ user: req.user.id }).populate({
+    path: "specialization",
+    select: "catname",
+  });
+
+  res.status(200).json({
+    success: true,
+    data: doctor,
+  });
 });
 
 // @desc      Get single doctor
@@ -120,8 +144,8 @@ exports.deleteDoctor = asyncHandler(async (req, res, next) => {
   res.status(200).json({ success: true, data: {} });
 });
 
-// @desc      Upload photo for product
-// @route     PUT /api/v1/vendors/:vendorsId/products/:productId/photo
+// @desc      Upload photo for doctor
+// @route     PUT /api/v1/doctors/photo
 // @access    Private
 exports.doctorPhotoUpload = asyncHandler(async (req, res, next) => {
   if (!req.files) {
@@ -145,19 +169,20 @@ exports.doctorPhotoUpload = asyncHandler(async (req, res, next) => {
     );
   }
 
-  // Create custom filename
-  // file.name = `photo_${file}}${path.parse(file.name).ext}`;
+  file.mv(
+    `${__dirname}/../../frontend/public/uploads/${file.name}`,
+    async (err) => {
+      if (err) {
+        console.error(err);
+        return next(new ErrorResponse(`Problem with file upload`, 500));
+      }
 
-  file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async (err) => {
-    if (err) {
-      console.error(err);
-      return next(new ErrorResponse(`Problem with file upload`, 500));
+      const files = `/uploads/${file.name}`;
+
+      res.status(200).json({
+        success: true,
+        data: files,
+      });
     }
-    const product = `${process.env.FILE_UPLOAD_PATH}/${file.name}`;
-
-    res.status(200).json({
-      success: true,
-      data: product,
-    });
-  });
+  );
 });

@@ -20,7 +20,6 @@ exports.register = asyncHandler(async (req, res, next) => {
     email,
     address,
     password,
-
     role,
   });
 

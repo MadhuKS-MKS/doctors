@@ -5,7 +5,7 @@ const {
   addDoctor,
   updateDoctor,
   deleteDoctor,
-
+  getMe,
   doctorPhotoUpload,
 } = require("../controllers/doctor");
 
@@ -20,8 +20,10 @@ router.route("/photo").post(protect, doctorPhotoUpload);
 
 router
   .route("/")
-  .get(advancedResults(Doctor), getDoctors)
+  .get(advancedResults(Doctor, { path: "category" }), getDoctors)
   .post(protect, addDoctor);
+
+router.route("/me").get(protect, getMe);
 
 router
   .route("/:doctorId")

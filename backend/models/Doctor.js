@@ -27,10 +27,10 @@ const DoctorsSchema = new mongoose.Schema(
         "Please add a valid email",
       ],
     },
-    // address: {
-    //   type: String,
-    //   required: [true, "Please add Address"],
-    // },
+    experience: {
+      type: String,
+      required: [true, "Please add Address"],
+    },
     fees: {
       type: String,
       required: [true, "Please add Date of Birth"],

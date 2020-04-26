@@ -79,4 +79,19 @@ UserSchema.methods.getResetPasswordToken = function () {
   return resetToken;
 };
 
+// Cascade delete order when a public is deleted
+UserSchema.pre("remove", async function (next) {
+  console.log(`Users being removed from list ${this._id}`);
+  await this.model("Doctor").deleteMany({ user: this._id });
+  next();
+});
+
+// Reverse populate with virtuals
+UserSchema.virtual("doctor", {
+  ref: "Doctor",
+  localField: "_id",
+  foreignField: "user",
+  justOne: false,
+});
+
 module.exports = mongoose.model("User", UserSchema);
